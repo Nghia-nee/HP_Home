@@ -7,6 +7,10 @@
     "label": "Có gác",
     "type": "boolean"
   },
+  "IsStudio": {
+    "label": "Studio",
+    "type": "boolean"
+  },
   "IsMayLanh": {
     "label": "Có máy lạnh",
     "type": "boolean"

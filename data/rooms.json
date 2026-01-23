@@ -7,9 +7,15 @@
     "wardLabel": "Phường 2",
     "price": 5000000,
     "tags": {
-      "IsBanCong": true,
+      "IsBanCong": false,
       "IsDuplex": true,
-      "IsMayLanh": false
+      "IsStudio": false,
+      "IsMayLanh": false,
+      "IsTachBep": true,
+      "IsThangMay": false,
+      "IsCuaSoTroi": true,
+      "IsMayGiat": false,
+      "IsTuLanh": false
     },
     "images": [
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P1_LVS/1.jpg",
@@ -27,9 +33,15 @@
     "wardLabel": "Phường 1",
     "price": 4300000,
     "tags": {
-      "IsBanCong": true,
+      "IsBanCong": false,
       "IsDuplex": true,
-      "IsMayLanh": false
+      "IsStudio": false,
+      "IsMayLanh": false,
+      "IsTachBep": false,
+      "IsThangMay": false,
+      "IsCuaSoTroi": false,
+      "IsMayGiat": false,
+      "IsTuLanh": false
     },
     "images": [
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P9_LLQ_101/1.jpg",
@@ -47,7 +59,13 @@
     "tags": {
       "IsBanCong": true,
       "IsDuplex": true,
-      "IsMayLanh": false
+      "IsStudio": false,
+      "IsMayLanh": true,
+      "IsTachBep": false,
+      "IsThangMay": true,
+      "IsCuaSoTroi": false,
+      "IsMayGiat": true,
+      "IsTuLanh": true
     },
     "images": [
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_01_09/1.jpg",
@@ -67,9 +85,15 @@
     "wardLabel": "Phường 11",
     "price": 5700000,
     "tags": {
-      "IsBanCong": true,
+      "IsBanCong": false,
       "IsDuplex": true,
-      "IsMayLanh": false
+      "IsStudio": false,
+      "IsMayLanh": true,
+      "IsTachBep": false,
+      "IsThangMay": true,
+      "IsCuaSoTroi": true,
+      "IsMayGiat": true,
+      "IsTuLanh": true
     },
     "images": [
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_02/1.jpg",
@@ -89,9 +113,15 @@
     "wardLabel": "Phường 11",
     "price": 5500000,
     "tags": {
-      "IsBanCong": true,
+      "IsBanCong": false,
       "IsDuplex": true,
-      "IsMayLanh": false
+      "IsStudio": false,
+      "IsMayLanh": true,
+      "IsTachBep": false,
+      "IsThangMay": true,
+      "IsCuaSoTroi": false,
+      "IsMayGiat": true,
+      "IsTuLanh": true
     },
     "images": [
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_03_04_07/1.jpg",
@@ -111,9 +141,15 @@
     "wardLabel": "Phường 11",
     "price": 5750000,
     "tags": {
-      "IsBanCong": true,
+      "IsBanCong": false,
       "IsDuplex": true,
-      "IsMayLanh": false
+      "IsStudio": false,
+      "IsMayLanh": true,
+      "IsTachBep": false,
+      "IsThangMay": true,
+      "IsCuaSoTroi": true,
+      "IsMayGiat": true,
+      "IsTuLanh": true
     },
     "images": [
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_05_06/1.jpg",
@@ -135,7 +171,13 @@
     "tags": {
       "IsBanCong": true,
       "IsDuplex": true,
-      "IsMayLanh": false
+      "IsStudio": false,
+      "IsMayLanh": true,
+      "IsTachBep": false,
+      "IsThangMay": true,
+      "IsCuaSoTroi": true,
+      "IsMayGiat": false,
+      "IsTuLanh": false
     },
     "images": [
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_203/1.jpg",
@@ -154,9 +196,15 @@
     "wardLabel": "Phường 12",
     "price": 4000000,
     "tags": {
-      "IsBanCong": true,
+      "IsBanCong": false,
       "IsDuplex": true,
-      "IsMayLanh": false
+      "IsStudio": false,
+      "IsMayLanh": true,
+      "IsTachBep": false,
+      "IsThangMay": true,
+      "IsCuaSoTroi": false,
+      "IsMayGiat": false,
+      "IsTuLanh": false
     },
     "images": [
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_206/1.jpg",
@@ -174,9 +222,15 @@
     "wardLabel": "Phường 12",
     "price": 4600000,
     "tags": {
-      "IsBanCong": true,
+      "IsBanCong": false,
       "IsDuplex": true,
-      "IsMayLanh": false
+      "IsStudio": false,
+      "IsMayLanh": true,
+      "IsTachBep": false,
+      "IsThangMay": false,
+      "IsCuaSoTroi": false,
+      "IsMayGiat": false,
+      "IsTuLanh": false
     },
     "images": [
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_202/1.jpg",
@@ -193,9 +247,15 @@
     "wardLabel": "Phường 15",
     "price": 4200000,
     "tags": {
-      "IsBanCong": true,
+      "IsBanCong": false,
       "IsDuplex": true,
-      "IsMayLanh": false
+      "IsStudio": false,
+      "IsMayLanh": true,
+      "IsTachBep": false,
+      "IsThangMay": false,
+      "IsCuaSoTroi": false,
+      "IsMayGiat": false,
+      "IsTuLanh": false
     },
     "images": [
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_G01/1.jpg",
