@@ -9,8 +9,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const wardDisplay = {
         'phuong-1': 'Phường 1',
+        'phuong-2': 'Phường 2',
         'phuong-3': 'Phường 3',
-        'phuong-5': 'Phường 5'
+        'phuong-4': 'Phường 4',
+        'phuong-5': 'Phường 5',
+        'phuong-6': 'Phường 6',
+        'phuong-7': 'Phường 7',
+        'phuong-8': 'Phường 8',
+        'phuong-9': 'Phường 9',
+        'phuong-10': 'Phường 10',
+        'phuong-11': 'Phường 11',
+        'phuong-12': 'Phường 12',
+        'phuong-13': 'Phường 13',
+        'phuong-14': 'Phường 14',   
+        'phuong-15': 'Phường 15'
     };
 
     // Load tag definitions
