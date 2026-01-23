@@ -1,0 +1,34 @@
+{
+  "IsBanCong": {
+    "label": "Có ban công",
+    "type": "boolean"
+  },
+  "IsDuplex": {
+    "label": "Có gác",
+    "type": "boolean"
+  },
+  "IsMayLanh": {
+    "label": "Có máy lạnh",
+    "type": "boolean"
+  },
+  "IsTuLanh": {
+    "label": "Có tủ lạnh",
+    "type": "boolean"
+  },
+  "IsMayGiat": {
+    "label": "Có máy giặt",
+    "type": "boolean"
+  },
+  "IsTachBep": {
+    "label": "Có bếp tách riêng",
+    "type": "boolean"
+  },
+  "IsCuaSoTroi": {
+    "label": "Có cửa sổ trời",
+    "type": "boolean"
+  },
+  "IsThangMay": {
+    "label": "Có thang máy",
+    "type": "boolean"
+  }
+}

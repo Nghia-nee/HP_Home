@@ -1,0 +1,207 @@
+[
+  {
+    "roomId": "TB_P2_PCL",
+    "district": "tan-binh",
+    "districtLabel": "Tân Bình",
+    "ward": "phuong-2",
+    "wardLabel": "Phường 2",
+    "price": 5000000,
+    "tags": {
+      "IsBanCong": true,
+      "IsDuplex": true,
+      "IsMayLanh": false
+    },
+    "images": [
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P1_LVS/1.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P1_LVS/2.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P1_LVS/3.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P1_LVS/4.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P1_LVS/5.jpg"
+    ]
+  },
+  {
+    "roomId": "TB_P9_LLQ_101",
+    "district": "tan-binh",
+    "districtLabel": "Tân Bình",
+    "ward": "phuong-1",
+    "wardLabel": "Phường 1",
+    "price": 4300000,
+    "tags": {
+      "IsBanCong": true,
+      "IsDuplex": true,
+      "IsMayLanh": false
+    },
+    "images": [
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P9_LLQ_101/1.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P9_LLQ_101/2.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P9_LLQ_101/3.jpg"
+    ]
+  },
+  {
+    "roomId": "TB_P11_VTT_01_09",
+    "district": "tan-binh",
+    "districtLabel": "Tân Bình",
+    "ward": "phuong-11",
+    "wardLabel": "Phường 11",
+    "price": 5000000,
+    "tags": {
+      "IsBanCong": true,
+      "IsDuplex": true,
+      "IsMayLanh": false
+    },
+    "images": [
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_01_09/1.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_01_09/2.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_01_09/3.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_01_09/4.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_01_09/5.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_01_09/6.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_01_09/7.jpg"
+    ]
+  },
+  {
+    "roomId": "TB_P11_VTT_02",
+    "district": "tan-binh",
+    "districtLabel": "Tân Bình",
+    "ward": "phuong-11",
+    "wardLabel": "Phường 11",
+    "price": 5700000,
+    "tags": {
+      "IsBanCong": true,
+      "IsDuplex": true,
+      "IsMayLanh": false
+    },
+    "images": [
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_02/1.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_02/2.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_02/3.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_02/4.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_02/5.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_02/6.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_02/7.jpg"
+    ]
+  },
+  {
+    "roomId": "TB_P11_VTT_03_04_07",
+    "district": "tan-binh",
+    "districtLabel": "Tân Bình",
+    "ward": "phuong-11",
+    "wardLabel": "Phường 11",
+    "price": 5500000,
+    "tags": {
+      "IsBanCong": true,
+      "IsDuplex": true,
+      "IsMayLanh": false
+    },
+    "images": [
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_03_04_07/1.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_03_04_07/2.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_03_04_07/3.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_03_04_07/4.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_03_04_07/5.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_03_04_07/6.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_03_04_07/7.jpg"
+    ]
+  },
+  {
+    "roomId": "TB_P11_VTT_05_06",
+    "district": "tan-binh",
+    "districtLabel": "Tân Bình",
+    "ward": "phuong-11",
+    "wardLabel": "Phường 11",
+    "price": 5750000,
+    "tags": {
+      "IsBanCong": true,
+      "IsDuplex": true,
+      "IsMayLanh": false
+    },
+    "images": [
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_05_06/1.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_05_06/2.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_05_06/3.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_05_06/4.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_05_06/5.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_05_06/6.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P11_VTT_05_06/7.jpg"
+    ]
+  },
+  {
+    "roomId": "TB_P12_TM_203",
+    "district": "tan-binh",
+    "districtLabel": "Tân Bình",
+    "ward": "phuong-12",
+    "wardLabel": "Phường 12",
+    "price": 4000000,
+    "tags": {
+      "IsBanCong": true,
+      "IsDuplex": true,
+      "IsMayLanh": false
+    },
+    "images": [
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_203/1.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_203/2.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_203/3.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_203/4.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_203/5.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_203/6.jpg"
+    ]
+  },
+  {
+    "roomId": "TB_P12_TM_206",
+    "district": "tan-binh",
+    "districtLabel": "Tân Bình",
+    "ward": "phuong-12",
+    "wardLabel": "Phường 12",
+    "price": 4000000,
+    "tags": {
+      "IsBanCong": true,
+      "IsDuplex": true,
+      "IsMayLanh": false
+    },
+    "images": [
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_206/1.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_206/2.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_206/3.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_206/4.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P12_TM_206/5.jpg"
+    ]
+  },
+  {
+    "roomId": "TB_P1_LVS_202",
+    "district": "tan-binh",
+    "districtLabel": "Tân Bình",
+    "ward": "phuong-12",
+    "wardLabel": "Phường 12",
+    "price": 4600000,
+    "tags": {
+      "IsBanCong": true,
+      "IsDuplex": true,
+      "IsMayLanh": false
+    },
+    "images": [
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_202/1.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_202/2.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_202/3.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_202/4.jpg"
+    ]
+  },
+  {
+    "roomId": "TB_P15_HVN_G01",
+    "district": "tan-binh",
+    "districtLabel": "Tân Bình",
+    "ward": "phuong-15",
+    "wardLabel": "Phường 15",
+    "price": 4200000,
+    "tags": {
+      "IsBanCong": true,
+      "IsDuplex": true,
+      "IsMayLanh": false
+    },
+    "images": [
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_G01/1.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_G01/2.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_G01/3.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_G01/4.jpg"
+    ]
+  }
+]
