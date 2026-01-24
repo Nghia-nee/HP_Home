@@ -1,10 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     let tagDefinitions = {};
     let currentPath = [];
+    let isAdmin = false;
+    let uploadedFiles = []; // Store uploaded files
 
     const districtDisplay = {
         'tan-binh': 'Tân Bình',
         'tan-phu': 'Tân Phú'
+    };
+
+    const districtCode = {
+        'tan-binh': 'TB',
+        'tan-phu': 'TP'
     };
 
     const wardDisplay = {
@@ -25,6 +32,24 @@ document.addEventListener('DOMContentLoaded', function() {
         'phuong-15': 'Phường 15'
     };
 
+    const wardCode = {
+        'phuong-1': 'P1',
+        'phuong-2': 'P2',
+        'phuong-3': 'P3',
+        'phuong-4': 'P4',
+        'phuong-5': 'P5',
+        'phuong-6': 'P6',
+        'phuong-7': 'P7',
+        'phuong-8': 'P8',
+        'phuong-9': 'P9',
+        'phuong-10': 'P10',
+        'phuong-11': 'P11',
+        'phuong-12': 'P12',
+        'phuong-13': 'P13',
+        'phuong-14': 'P14',
+        'phuong-15': 'P15'
+    };
+
     // Load tag definitions
     fetch('/tags')
         .then(response => response.json())
@@ -37,6 +62,11 @@ document.addEventListener('DOMContentLoaded', function() {
         updateFromHash();
         window.addEventListener('hashchange', updateFromHash);
 
+        // Logo click to go home
+        document.querySelector('.logo').addEventListener('click', () => {
+            window.location.hash = '';
+        });
+
         // Price buttons
         document.querySelectorAll('#price-section .panel-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -44,6 +74,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 setPath(['district', price]);
             });
         });
+
+        // Admin toggle
+        document.getElementById('admin-toggle').addEventListener('click', toggleAdmin);
+
+        // Add room button
+        document.getElementById('add-room-btn').addEventListener('click', showAddRoomModal);
+        document.getElementById('add-room-main-btn').addEventListener('click', showAddRoomModal);
     }
 
     function updateFromHash() {
@@ -132,9 +169,32 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+    function changeImage(carousel, direction) {
+        const images = carousel.querySelectorAll('img');
+        const currentImage = carousel.querySelector('img.active');
+        const currentIndex = Array.from(images).indexOf(currentImage);
+        let nextIndex = (currentIndex + direction + images.length) % images.length;
+        
+        images.forEach(img => img.classList.remove('active'));
+        images[nextIndex].classList.add('active');
+    }
+
     function createRoomCard(room) {
         const card = document.createElement('div');
         card.className = 'room-card';
+        card.addEventListener('click', () => showRoomModal(room));
+
+        // Add delete button if admin
+        if (isAdmin) {
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Xóa';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteRoom(room.roomId);
+            });
+            card.appendChild(deleteBtn);
+        }
 
         const carousel = document.createElement('div');
         carousel.className = 'carousel';
@@ -151,23 +211,59 @@ document.addEventListener('DOMContentLoaded', function() {
             const prevBtn = document.createElement('button');
             prevBtn.className = 'carousel-btn prev-btn';
             prevBtn.textContent = '‹';
-            prevBtn.addEventListener('click', () => changeImage(carousel, -1));
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                clearInterval(autoRotateInterval);
+                changeImage(carousel, -1);
+                startAutoRotate();
+            });
 
             const nextBtn = document.createElement('button');
             nextBtn.className = 'carousel-btn next-btn';
             nextBtn.textContent = '›';
-            nextBtn.addEventListener('click', () => changeImage(carousel, 1));
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                clearInterval(autoRotateInterval);
+                changeImage(carousel, 1);
+                startAutoRotate();
+            });
 
             carousel.appendChild(prevBtn);
             carousel.appendChild(nextBtn);
+
+            // Auto-rotate images every 3 seconds
+            let autoRotateInterval;
+            const startAutoRotate = () => {
+                autoRotateInterval = setInterval(() => {
+                    changeImage(carousel, 1);
+                }, 3000);
+            };
+
+            // Pause on hover
+            carousel.addEventListener('mouseenter', () => {
+                clearInterval(autoRotateInterval);
+            });
+            carousel.addEventListener('mouseleave', () => {
+                startAutoRotate();
+            });
+
+            startAutoRotate();
         }
 
         const info = document.createElement('div');
         info.className = 'room-info';
 
-        const price = document.createElement('div');
-        price.className = 'room-price';
-        price.textContent = `${room.price.toLocaleString()} VND`;
+        // Only show price in admin mode
+        if (isAdmin) {
+            const price = document.createElement('div');
+            price.className = 'room-price';
+            price.textContent = `${room.price.toLocaleString()} VND`;
+            info.appendChild(price);
+        }
+
+        const roomId = document.createElement('div');
+        roomId.className = 'room-id';
+        roomId.textContent = `Mã phòng: ${room.roomId}`;
 
         const tagsDiv = document.createElement('div');
         tagsDiv.className = 'tags';
@@ -181,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        info.appendChild(price);
+        info.appendChild(roomId);
         info.appendChild(tagsDiv);
 
         card.appendChild(carousel);
@@ -190,11 +286,324 @@ document.addEventListener('DOMContentLoaded', function() {
         return card;
     }
 
-    function changeImage(carousel, direction) {
-        const images = carousel.querySelectorAll('img');
-        let activeIndex = Array.from(images).findIndex(img => img.classList.contains('active'));
-        images[activeIndex].classList.remove('active');
-        activeIndex = (activeIndex + direction + images.length) % images.length;
-        images[activeIndex].classList.add('active');
+    function toggleAdmin() {
+        if (!isAdmin) {
+            const key = prompt('Nhập key admin:');
+            if (key !== 'deptraiprovjp') {
+                alert('Key sai!');
+                return;
+            }
+        }
+        isAdmin = !isAdmin;
+        const btn = document.getElementById('admin-toggle');
+        btn.textContent = isAdmin ? 'Exit Admin' : 'Admin';
+        btn.style.background = isAdmin ? '#ff4444' : '#ff69b4';
+        document.getElementById('admin-controls').style.display = isAdmin ? 'block' : 'none';
+        document.getElementById('admin-main-controls').style.display = isAdmin ? 'block' : 'none';
+        // Reload current view to show/hide admin elements
+        updateFromHash();
+    }
+
+    function showAddRoomModal() {
+        const modal = document.getElementById('add-room-modal');
+        // Populate districts
+        const districtSelect = document.getElementById('district-select');
+        districtSelect.innerHTML = '';
+        Object.keys(districtDisplay).forEach(d => {
+            const option = document.createElement('option');
+            option.value = d;
+            option.textContent = districtDisplay[d];
+            districtSelect.appendChild(option);
+        });
+        // Populate wards
+        const wardSelect = document.getElementById('ward-select');
+        wardSelect.innerHTML = '';
+        Object.keys(wardDisplay).forEach(w => {
+            const option = document.createElement('option');
+            option.value = w;
+            option.textContent = wardDisplay[w];
+            wardSelect.appendChild(option);
+        });
+        // Populate tags
+        const tagsContainer = document.getElementById('tags-checkboxes');
+        tagsContainer.innerHTML = '';
+        Object.keys(tagDefinitions).forEach(key => {
+            const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = key;
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(tagDefinitions[key].label));
+            tagsContainer.appendChild(label);
+        });
+        
+        // Setup file drag-drop
+        setupFileDragDrop();
+        uploadedFiles = [];
+        document.getElementById('file-list').innerHTML = '';
+        
+        modal.style.display = 'block';
+    }
+
+    function setupFileDragDrop() {
+        const dropZone = document.getElementById('drop-zone');
+        const imageInput = document.getElementById('image-input');
+
+        dropZone.addEventListener('click', () => imageInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+    }
+
+    function handleFiles(files) {
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        Array.from(files).forEach(file => {
+            if (validTypes.includes(file.type)) {
+                uploadedFiles.push(file);
+                displayFilePreview(file);
+            } else {
+                alert(`File ${file.name} không phải định dạng ảnh hợp lệ (jpg, png, gif, webp)`);
+            }
+        });
+    }
+
+    function displayFilePreview(file) {
+        const fileList = document.getElementById('file-list');
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            fileItem.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'file-item-remove';
+        removeBtn.textContent = '×';
+        removeBtn.type = 'button';
+        removeBtn.addEventListener('click', () => {
+            const index = uploadedFiles.indexOf(file);
+            uploadedFiles.splice(index, 1);
+            fileItem.remove();
+        });
+        fileItem.appendChild(removeBtn);
+
+        fileList.appendChild(fileItem);
+    }
+
+    // Format price input with thousand separators
+    function formatPriceInput(input) {
+        // Get cursor position
+        const cursorPos = input.selectionStart;
+        const oldValue = input.value;
+        const oldLength = oldValue.length;
+        
+        // Remove non-digits
+        let value = input.value.replace(/\D/g, '');
+        if (value === '') {
+            input.value = '';
+            return;
+        }
+        
+        // Add dots every 3 digits from right
+        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        input.value = value;
+        
+        // Restore cursor position
+        const newLength = value.length;
+        const diff = newLength - oldLength;
+        input.setSelectionRange(cursorPos + diff, cursorPos + diff);
+    }
+
+    // Setup price input formatting
+    const priceInput = document.getElementById('price');
+    if (priceInput) {
+        priceInput.addEventListener('input', function() {
+            formatPriceInput(this);
+        });
+    }
+
+    function deleteRoom(roomId) {
+        if (confirm('Bạn có chắc muốn xóa phòng này?')) {
+            fetch(`/rooms/${roomId}`, { method: 'DELETE' })
+                .then(() => {
+                    alert('Đã xóa phòng');
+                    updateFromHash(); // Reload list
+                });
+        }
+    }
+
+    function showRoomModal(room) {
+        const modal = document.getElementById('room-modal');
+        const modalCarousel = document.getElementById('modal-carousel');
+        const modalInfo = document.getElementById('modal-info');
+
+        // Populate carousel
+        modalCarousel.innerHTML = '';
+        room.images.forEach((img, index) => {
+            const imgEl = document.createElement('img');
+            imgEl.src = img;
+            imgEl.alt = 'Room image';
+            if (index === 0) imgEl.classList.add('active');
+            modalCarousel.appendChild(imgEl);
+        });
+
+        if (room.images.length > 1) {
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'carousel-btn prev-btn';
+            prevBtn.textContent = '‹';
+            prevBtn.addEventListener('click', () => changeImage(modalCarousel, -1));
+
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'carousel-btn next-btn';
+            nextBtn.textContent = '›';
+            nextBtn.addEventListener('click', () => changeImage(modalCarousel, 1));
+
+            modalCarousel.appendChild(prevBtn);
+            modalCarousel.appendChild(nextBtn);
+        }
+
+        // Populate info
+        modalInfo.innerHTML = `
+            <h3>Mã phòng: ${room.roomId}</h3>
+            ${isAdmin ? `<p><strong>Giá:</strong> ${room.price.toLocaleString()} VND</p>` : ''}
+            <p><strong>Quận:</strong> ${districtDisplay[room.district] || room.district}</p>
+            <p><strong>Phường:</strong> ${wardDisplay[room.ward] || room.ward}</p>
+            ${isAdmin && room.note ? `<p><strong>Note:</strong> ${room.note}</p>` : ''}
+            <div class="modal-tags">
+                ${Object.entries(room.tags).filter(([key, value]) => value && tagDefinitions[key]).map(([key]) => 
+                    `<span class="tag">${tagDefinitions[key].label}</span>`
+                ).join('')}
+            </div>
+        `;
+
+        modal.style.display = 'block';
+    }
+
+    // Close modal
+    document.querySelector('.close').addEventListener('click', () => {
+        document.getElementById('room-modal').style.display = 'none';
+        document.getElementById('add-room-modal').style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        const roomModal = document.getElementById('room-modal');
+        const addModal = document.getElementById('add-room-modal');
+        if (event.target === roomModal) {
+            roomModal.style.display = 'none';
+        }
+        if (event.target === addModal) {
+            addModal.style.display = 'none';
+        }
+    });
+
+    // Add room form
+    document.getElementById('add-room-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Validate price
+        const priceValue = document.getElementById('price').value.replace(/\./g, '');
+        const priceNum = parseInt(priceValue);
+        if (isNaN(priceNum) || priceNum < 1000000 || priceNum > 100000000) {
+            alert('Giá phải từ 1.000.000 đến 100.000.000 VNĐ');
+            return;
+        }
+        
+        const formData = new FormData();
+        const tags = {};
+        document.querySelectorAll('#tags-checkboxes input:checked').forEach(cb => {
+            tags[cb.value] = true;
+        });
+
+        // Generate folder name
+        const district = document.getElementById('district-select').value;
+        const ward = document.getElementById('ward-select').value;
+        const streetName = document.getElementById('street-name').value;
+        const roomId = document.getElementById('room-id').value;
+        
+        const distCode = districtCode[district] || '';
+        const wardCode_val = wardCode[ward] || '';
+        const streetCode = generateStreetCode(streetName);
+        const folderName = roomId 
+            ? `${distCode}_${wardCode_val}_${streetCode}_${roomId}` 
+            : `${distCode}_${wardCode_val}_${streetCode}`;
+
+        formData.append('roomId', folderName);
+        formData.append('district', district);
+        formData.append('districtLabel', districtDisplay[district]);
+        formData.append('ward', ward);
+        formData.append('wardLabel', wardDisplay[ward]);
+        formData.append('price', priceNum);
+        formData.append('tags', JSON.stringify(tags));
+        formData.append('note', document.getElementById('note').value);
+        formData.append('folderName', folderName);
+
+        // Append files
+        uploadedFiles.forEach((file, index) => {
+            formData.append('images', file, `${index + 1}.${getFileExtension(file.name)}`);
+        });
+
+        if (uploadedFiles.length === 0) {
+            alert('Vui lòng chọn ít nhất 1 ảnh');
+            return;
+        }
+
+        fetch('/rooms', {
+            method: 'POST',
+            body: formData
+        })
+        .then(async (res) => {
+            const payload = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                throw new Error(payload.error || 'Upload failed');
+            }
+            alert('Đã thêm phòng');
+            document.getElementById('add-room-modal').style.display = 'none';
+            uploadedFiles = [];
+            updateFromHash(); // Reload list
+        })
+        .catch(err => alert('Lỗi: ' + err.message));
+    });
+
+    // Helper function to remove Vietnamese accents
+    function removeVietnameseAccents(str) {
+        return str
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .replace(/Đ/g, 'D');
+    }
+
+    // Helper function to generate street code
+    function generateStreetCode(streetName) {
+        return removeVietnameseAccents(streetName)
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase())
+            .join('')
+            .substring(0, 10); // Limit to 10 chars
+    }
+
+    // Helper function to get file extension
+    function getFileExtension(filename) {
+        return filename.split('.').pop().toLowerCase();
     }
 });

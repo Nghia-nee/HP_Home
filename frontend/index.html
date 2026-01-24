@@ -12,8 +12,22 @@
             <h1>HP Home</h1>
             <p>Phòng trọ & Căn hộ giá tốt TP.HCM</p>
         </div>
+        <button id="admin-toggle" class="admin-btn">Admin</button>
     </header>
     <main>
+        <div id="vibe-section" class="vibe-box">
+            <h2>🏠 Chào mừng đến với HP Home!</h2>
+            <p>Tìm phòng trọ & căn hộ ưng ý với giá tốt tại TP.HCM. Chúng tôi mang đến trải nghiệm thuê trọ dễ dàng và thoải mái.</p>
+            <div class="vibe-icons">
+                <span>❤️</span>
+                <span>🏡</span>
+                <span>🌟</span>
+                <span>💼</span>
+            </div>
+        </div>
+        <div id="admin-main-controls" style="display: none; text-align: center; margin: 20px 0;">
+            <button id="add-room-main-btn" class="panel-btn">Thêm phòng mới</button>
+        </div>
         <div id="price-section" class="section">
             <h2>Chọn mức giá</h2>
             <div class="button-grid">
@@ -31,9 +45,48 @@
         </div>
         <div id="rooms-section" class="section hidden">
             <h2>Danh sách phòng</h2>
+            <div id="admin-controls" style="display: none; margin-bottom: 20px;">
+                <button id="add-room-btn" class="panel-btn">Thêm phòng</button>
+            </div>
             <div id="room-list" class="room-grid"></div>
         </div>
     </main>
+    <div id="room-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-carousel" class="carousel"></div>
+            <div id="modal-info" class="modal-info"></div>
+        </div>
+    </div>
+    <div id="add-room-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Thêm phòng mới</h2>
+            <form id="add-room-form">
+                <label>Mã phòng: <input type="text" id="room-id" required placeholder="VD: 203"></label>
+                <label>Quận: <select id="district-select" required></select></label>
+                <label>Phường: <select id="ward-select" required></select></label>
+                <label>Tên đường: <input type="text" id="street-name" required placeholder="VD: Lý Thường Kiệt (sẽ tự convert thành LTK)"></label>
+                <label>Giá (VND): <input type="text" id="price" required placeholder="5.000.000" pattern="[0-9.]+"></label>
+                
+                <div class="file-upload-section">
+                    <label>Ảnh (kéo thả hoặc click để chọn):</label>
+                    <div id="drop-zone" class="drop-zone">
+                        <div class="drop-zone-content">
+                            <p>Kéo thả ảnh vào đây hoặc</p>
+                            <input type="file" id="image-input" multiple accept="image/*">
+                            <p>Click để chọn ảnh</p>
+                        </div>
+                    </div>
+                    <div id="file-list" class="file-list"></div>
+                </div>
+                
+                <div id="tags-checkboxes"></div>
+                <label>Note: <textarea id="note" placeholder="Thông tin thêm: tiền điện, số điện thoại chủ nhà, ..."></textarea></label>
+                <button type="submit">Thêm phòng</button>
+            </form>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>

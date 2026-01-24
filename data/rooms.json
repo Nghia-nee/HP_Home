@@ -263,5 +263,29 @@
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_G01/3.jpg",
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_HVN_G01/4.jpg"
     ]
+  },
+  {
+    "roomId": "TB_P15_PHI_402",
+    "district": "tan-binh",
+    "districtLabel": "Tân Bình",
+    "ward": "phuong-15",
+    "wardLabel": "Phường 15",
+    "price": 3500000,
+    "tags": {
+      "IsDuplex": true,
+      "IsMayGiat": true,
+      "IsMayLanh": true,
+      "IsThangMay": true,
+      "IsTuLanh": true
+    },
+    "note": "Phí quản lý: 180k/phòng\r\nXe: 100k/c\r\nđiện 4k, nước 100k\r\ngiảm 2 trăm 3 tháng đầu",
+    "images": [
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_PHI_402/1.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_PHI_402/2.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_PHI_402/3.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_PHI_402/4.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_PHI_402/5.jpg",
+      "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P15_PHI_402/6.jpg"
+    ]
   }
 ]
