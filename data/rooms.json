@@ -33,21 +33,14 @@
     "wardLabel": "Phường 1",
     "price": 4300000,
     "tags": {
-      "IsBanCong": false,
-      "IsDuplex": true,
-      "IsStudio": false,
-      "IsMayLanh": false,
-      "IsTachBep": false,
-      "IsThangMay": false,
-      "IsCuaSoTroi": false,
-      "IsMayGiat": false,
-      "IsTuLanh": false
+      "IsDuplex": true
     },
     "images": [
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P9_LLQ_101/1.jpg",
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P9_LLQ_101/2.jpg",
       "https://hp-home-assets.s3.ap-southeast-1.amazonaws.com/rooms/TB_P9_LLQ_101/3.jpg"
-    ]
+    ],
+    "note": ""
   },
   {
     "roomId": "TB_P11_VTT_01_09",

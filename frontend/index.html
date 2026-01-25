@@ -48,6 +48,10 @@
             <div id="admin-controls" style="display: none; margin-bottom: 20px;">
                 <button id="add-room-btn" class="panel-btn">Thêm phòng</button>
             </div>
+            <div id="tag-filter-wrapper" class="tag-filter-wrapper hidden">
+                <span>Lọc theo tag:</span>
+                <div id="tag-filter" class="tag-filter"></div>
+            </div>
             <div id="room-list" class="room-grid"></div>
         </div>
     </main>
@@ -66,7 +70,7 @@
                 <label>Mã phòng: <input type="text" id="room-id" required placeholder="VD: 203"></label>
                 <label>Quận: <select id="district-select" required></select></label>
                 <label>Phường: <select id="ward-select" required></select></label>
-                <label>Tên đường: <input type="text" id="street-name" required placeholder="VD: Lý Thường Kiệt (sẽ tự convert thành LTK)"></label>
+                <label>Tên đường: <input type="text" id="street-name" required placeholder="Chỉ nhập tên đường (VD: Lý Thường Kiệt)"></label>
                 <label>Giá (VND): <input type="text" id="price" required placeholder="5.000.000" pattern="[0-9.]+"></label>
                 
                 <div class="file-upload-section">

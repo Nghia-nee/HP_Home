@@ -173,11 +173,31 @@ main {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     border: 2px solid #e6e6fa;
     transition: transform 0.3s;
+    position: relative;
 }
 
 .room-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.room-card.hot-deal {
+    border-color: #ff7f50;
+    box-shadow: 0 8px 24px rgba(255,127,80,0.35);
+}
+
+.hot-deal-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(135deg, #ff7f50 0%, #ffd27f 100%);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(255,127,80,0.4);
+    z-index: 5;
 }
 
 .delete-btn {
@@ -269,6 +289,48 @@ main {
     font-size: 12px;
     color: #333;
     border: 1px solid #ffb6c1;
+}
+
+.tag-filter-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.tag-filter-wrapper span {
+    color: #5a4fcf;
+    font-weight: 600;
+}
+
+.tag-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-filter-btn {
+    background: #fff;
+    border: 1px solid #dda0dd;
+    border-radius: 999px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #5a4fcf;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.tag-filter-btn:hover {
+    background: rgba(221,160,221,0.15);
+    border-color: #ff69b4;
+}
+
+.tag-filter-btn.active {
+    background: linear-gradient(135deg, #ffb3ba 0%, #ffd3a5 100%);
+    color: #333;
+    border-color: #ff69b4;
+    box-shadow: 0 4px 10px rgba(255,105,180,0.3);
 }
 
 @media (max-width: 768px) {

@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentPath = [];
     let isAdmin = false;
     let uploadedFiles = []; // Store uploaded files
+    let currentRooms = [];
+    const activeTagFilters = new Set();
 
     const districtDisplay = {
         'tan-binh': 'Tân Bình',
@@ -160,13 +162,55 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`/rooms?district=${encodeURIComponent(district)}&ward=${encodeURIComponent(ward)}&priceRange=${priceRange}`)
             .then(response => response.json())
             .then(rooms => {
-                const container = document.getElementById('room-list');
-                container.innerHTML = '';
-                rooms.forEach(room => {
-                    const card = createRoomCard(room);
-                    container.appendChild(card);
-                });
+                currentRooms = rooms;
+                activeTagFilters.clear();
+                renderTagFilter();
+                renderRoomList();
             });
+    }
+
+    function renderRoomList() {
+        const container = document.getElementById('room-list');
+        container.innerHTML = '';
+
+        let roomsToRender = currentRooms;
+        if (activeTagFilters.size > 0) {
+            roomsToRender = currentRooms.filter(room => {
+                if (!room.tags) return false;
+                return Array.from(activeTagFilters).every(tagKey => room.tags[tagKey]);
+            });
+        }
+
+        roomsToRender.forEach(room => {
+            const card = createRoomCard(room);
+            container.appendChild(card);
+        });
+    }
+
+    function renderTagFilter() {
+        const wrapper = document.getElementById('tag-filter-wrapper');
+        const filterBox = document.getElementById('tag-filter');
+        if (!wrapper || !filterBox) return;
+
+        filterBox.innerHTML = '';
+        Object.entries(tagDefinitions).forEach(([key, def]) => {
+            const btn = document.createElement('button');
+            btn.className = 'tag-filter-btn';
+            btn.textContent = def.label;
+            if (activeTagFilters.has(key)) btn.classList.add('active');
+            btn.addEventListener('click', () => {
+                if (activeTagFilters.has(key)) {
+                    activeTagFilters.delete(key);
+                } else {
+                    activeTagFilters.add(key);
+                }
+                renderTagFilter();
+                renderRoomList();
+            });
+            filterBox.appendChild(btn);
+        });
+
+        wrapper.classList.remove('hidden');
     }
 
     function changeImage(carousel, direction) {
@@ -183,6 +227,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = document.createElement('div');
         card.className = 'room-card';
         card.addEventListener('click', () => showRoomModal(room));
+
+        if (room.tags && room.tags.IsHotDeal) {
+            card.classList.add('hot-deal');
+            const badge = document.createElement('div');
+            badge.className = 'hot-deal-badge';
+            badge.textContent = 'Hot deal';
+            card.appendChild(badge);
+        }
 
         // Add delete button if admin
         if (isAdmin) {
@@ -306,6 +358,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showAddRoomModal() {
         const modal = document.getElementById('add-room-modal');
+        const form = document.getElementById('add-room-form');
+        form.dataset.mode = 'add';
+        form.dataset.roomId = '';
+        
+        document.querySelector('#add-room-modal h2').textContent = 'Thêm phòng mới';
+        document.querySelector('#add-room-form button[type="submit"]').textContent = 'Thêm phòng';
+        
+        // Clear form
+        form.reset();
+        uploadedFiles = [];
+        document.getElementById('file-list').innerHTML = '';
+        
         // Populate districts
         const districtSelect = document.getElementById('district-select');
         districtSelect.innerHTML = '';
@@ -339,8 +403,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Setup file drag-drop
         setupFileDragDrop();
-        uploadedFiles = [];
-        document.getElementById('file-list').innerHTML = '';
         
         modal.style.display = 'block';
     }
@@ -547,7 +609,8 @@ document.addEventListener('DOMContentLoaded', function() {
             ? `${distCode}_${wardCode_val}_${streetCode}_${roomId}` 
             : `${distCode}_${wardCode_val}_${streetCode}`;
 
-        formData.append('roomId', folderName);
+        const newRoomId = folderName;
+        formData.append('roomId', newRoomId);
         formData.append('district', district);
         formData.append('districtLabel', districtDisplay[district]);
         formData.append('ward', ward);
@@ -558,9 +621,11 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('folderName', folderName);
 
         // Append files
-        uploadedFiles.forEach((file, index) => {
-            formData.append('images', file, `${index + 1}.${getFileExtension(file.name)}`);
-        });
+        if (uploadedFiles.length > 0) {
+            uploadedFiles.forEach((file, index) => {
+                formData.append('images', file, `${index + 1}.${getFileExtension(file.name)}`);
+            });
+        }
 
         if (uploadedFiles.length === 0) {
             alert('Vui lòng chọn ít nhất 1 ảnh');
