@@ -411,7 +411,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const dropZone = document.getElementById('drop-zone');
         const imageInput = document.getElementById('image-input');
 
-        dropZone.addEventListener('click', () => imageInput.click());
+        if (!dropZone || !imageInput) {
+            console.error('Drop zone or image input not found!');
+            return;
+        }
+
+        console.log('Setting up file drag-drop listeners');
+
+        dropZone.addEventListener('click', () => {
+            console.log('Drop zone clicked');
+            imageInput.click();
+        });
 
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
@@ -425,10 +435,12 @@ document.addEventListener('DOMContentLoaded', function() {
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropZone.classList.remove('dragover');
+            console.log('Files dropped:', e.dataTransfer.files.length);
             handleFiles(e.dataTransfer.files);
         });
 
         imageInput.addEventListener('change', (e) => {
+            console.log('Input change event:', e.target.files.length, 'files');
             handleFiles(e.target.files);
             // Clear input so user can select same file again
             e.target.value = '';
@@ -436,8 +448,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleFiles(files) {
+        console.log('handleFiles called with', files.length, 'files');
         const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
         Array.from(files).forEach(file => {
+            console.log('Processing file:', file.name, file.type);
             if (validTypes.includes(file.type)) {
                 uploadedFiles.push(file);
                 displayFilePreview(file);
@@ -445,6 +459,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert(`File ${file.name} không phải định dạng ảnh hợp lệ (jpg, png, gif, webp)`);
             }
         });
+        console.log('Total uploaded files:', uploadedFiles.length);
     }
 
     function displayFilePreview(file) {
