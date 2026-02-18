@@ -42,8 +42,21 @@ def build_s3_url(bucket, region, key):
 with open(os.path.join(os.path.dirname(__file__), '..', 'data', 'tag-definitions.json'), 'r', encoding='utf-8') as f:
     tag_definitions = json.load(f)
 
-with open(os.path.join(os.path.dirname(__file__), '..', 'data', 'rooms.json'), 'r', encoding='utf-8') as f:
-    rooms = json.load(f)
+# Load rooms.json - try S3 first if configured, otherwise local
+rooms_file = os.path.join(os.path.dirname(__file__), '..', 'data', 'rooms.json')
+if USE_S3:
+    try:
+        s3_client = build_s3_client()
+        obj = s3_client.get_object(Bucket=S3_BUCKET, Key='data/rooms.json')
+        rooms = json.loads(obj['Body'].read().decode('utf-8'))
+        print("Loaded rooms.json from S3")
+    except (BotoCoreError, ClientError) as e:
+        print(f"Could not load rooms.json from S3: {e}. Using local file.")
+        with open(rooms_file, 'r', encoding='utf-8') as f:
+            rooms = json.load(f)
+else:
+    with open(rooms_file, 'r', encoding='utf-8') as f:
+        rooms = json.load(f)
 
 def get_price_filter(price_range):
     if price_range == 'under-4m':
@@ -150,9 +163,24 @@ def add_room():
                     room_data['images'].append(f"/assets/images/{folder_name}/{filename}")
         
         rooms.append(room_data)
-        # Save to file
-        with open(os.path.join(os.path.dirname(__file__), '..', 'data', 'rooms.json'), 'w', encoding='utf-8') as f:
+        # Save to file (local)
+        rooms_file = os.path.join(os.path.dirname(__file__), '..', 'data', 'rooms.json')
+        with open(rooms_file, 'w', encoding='utf-8') as f:
             json.dump(rooms, f, ensure_ascii=False, indent=2)
+        
+        # Also save to S3 if configured
+        if USE_S3:
+            try:
+                s3_client = build_s3_client()
+                s3_client.upload_file(
+                    rooms_file,
+                    S3_BUCKET,
+                    'data/rooms.json',
+                    ExtraArgs={'ContentType': 'application/json'}
+                )
+            except (BotoCoreError, ClientError) as e:
+                print(f"Warning: Failed to sync rooms.json to S3: {e}")
+        
         return jsonify({'message': 'Room added', 'roomId': room_data['roomId']}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 400
@@ -200,9 +228,24 @@ def delete_room(room_id):
     
     # Remove from rooms list
     rooms = [r for r in rooms if r['roomId'] != room_id]
-    # Save to file
-    with open(os.path.join(os.path.dirname(__file__), '..', 'data', 'rooms.json'), 'w', encoding='utf-8') as f:
+    # Save to file (local)
+    rooms_file = os.path.join(os.path.dirname(__file__), '..', 'data', 'rooms.json')
+    with open(rooms_file, 'w', encoding='utf-8') as f:
         json.dump(rooms, f, ensure_ascii=False, indent=2)
+    
+    # Also save to S3 if configured
+    if USE_S3:
+        try:
+            s3_client = build_s3_client()
+            s3_client.upload_file(
+                rooms_file,
+                S3_BUCKET,
+                'data/rooms.json',
+                ExtraArgs={'ContentType': 'application/json'}
+            )
+        except (BotoCoreError, ClientError) as e:
+            print(f"Warning: Failed to sync rooms.json to S3: {e}")
+    
     return jsonify({'message': 'Room deleted'})
 
 # Serve uploaded images
