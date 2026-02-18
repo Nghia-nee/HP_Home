@@ -114,6 +114,16 @@ def get_rooms():
 def get_tags():
     return jsonify(tag_definitions)
 
+@app.route('/config')
+def get_config():
+    """Return server configuration for debugging"""
+    return jsonify({
+        'useS3': USE_S3,
+        's3Bucket': S3_BUCKET,
+        's3Region': S3_REGION,
+        'hasAwsCredentials': bool(os.environ.get('AWS_ACCESS_KEY_ID')),
+    })
+
 @app.route('/rooms', methods=['POST'])
 def add_room():
     try:
@@ -171,6 +181,7 @@ def add_room():
         # Also save to S3 if configured
         if USE_S3:
             try:
+                print(f"Syncing rooms.json to S3 bucket: {S3_BUCKET}")
                 s3_client = build_s3_client()
                 s3_client.upload_file(
                     rooms_file,
@@ -178,8 +189,13 @@ def add_room():
                     'data/rooms.json',
                     ExtraArgs={'ContentType': 'application/json'}
                 )
+                print(f"Successfully synced rooms.json to S3")
             except (BotoCoreError, ClientError) as e:
-                print(f"Warning: Failed to sync rooms.json to S3: {e}")
+                error_msg = f"Failed to sync rooms.json to S3: {str(e)}"
+                print(f"ERROR: {error_msg}")
+                # Remove the room we just added since S3 sync failed
+                rooms.pop()
+                return jsonify({'error': error_msg}), 500
         
         return jsonify({'message': 'Room added', 'roomId': room_data['roomId']}), 201
     except Exception as e:
@@ -227,6 +243,7 @@ def delete_room(room_id):
             shutil.rmtree(room_folder)
     
     # Remove from rooms list
+    old_rooms = rooms[:]
     rooms = [r for r in rooms if r['roomId'] != room_id]
     # Save to file (local)
     rooms_file = os.path.join(os.path.dirname(__file__), '..', 'data', 'rooms.json')
@@ -236,6 +253,7 @@ def delete_room(room_id):
     # Also save to S3 if configured
     if USE_S3:
         try:
+            print(f"Syncing rooms.json to S3 after deletion")
             s3_client = build_s3_client()
             s3_client.upload_file(
                 rooms_file,
@@ -243,8 +261,13 @@ def delete_room(room_id):
                 'data/rooms.json',
                 ExtraArgs={'ContentType': 'application/json'}
             )
+            print(f"Successfully synced rooms.json to S3")
         except (BotoCoreError, ClientError) as e:
-            print(f"Warning: Failed to sync rooms.json to S3: {e}")
+            error_msg = f"Failed to sync rooms.json to S3: {str(e)}"
+            print(f"ERROR: {error_msg}")
+            # Restore rooms list since S3 sync failed
+            rooms[:] = old_rooms
+            return jsonify({'error': error_msg}), 500
     
     return jsonify({'message': 'Room deleted'})
 

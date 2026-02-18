@@ -83,6 +83,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add room button
         document.getElementById('add-room-btn').addEventListener('click', showAddRoomModal);
         document.getElementById('add-room-main-btn').addEventListener('click', showAddRoomModal);
+        
+        // Setup file drag-drop once
+        setupFileDragDrop();
     }
 
     function updateFromHash() {
@@ -401,9 +404,6 @@ document.addEventListener('DOMContentLoaded', function() {
             tagsContainer.appendChild(label);
         });
         
-        // Setup file drag-drop
-        setupFileDragDrop();
-        
         modal.style.display = 'block';
     }
 
@@ -430,6 +430,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         imageInput.addEventListener('change', (e) => {
             handleFiles(e.target.files);
+            // Clear input so user can select same file again
+            e.target.value = '';
         });
     }
 
