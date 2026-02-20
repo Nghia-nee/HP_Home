@@ -141,16 +141,26 @@ def add_room():
         }
         
         files = request.files.getlist('images')
+        print(f"=== ADD ROOM REQUEST ===")
+        print(f"Folder name: {folder_name}")
+        print(f"Number of files received: {len(files)}")
+        print(f"USE_S3: {USE_S3}")
+        print(f"S3_BUCKET: {S3_BUCKET}")
+        print(f"S3_REGION: {S3_REGION}")
 
         if USE_S3:
             if not S3_REGION:
                 return jsonify({'error': 'Missing AWS_REGION for S3 upload'}), 400
             s3_client = build_s3_client()
+            print(f"Starting S3 upload for {len(files)} files...")
             for i, file in enumerate(files, 1):
                 if file and allowed_file(file.filename):
                     ext = file.filename.rsplit('.', 1)[1].lower()
                     key = f"rooms/{folder_name}/{i}.{ext}"
+                    print(f"Uploading file {i}: {file.filename} -> {key}")
                     try:
+                        # Reset file pointer to beginning
+                        file.seek(0)
                         s3_client.upload_fileobj(
                             file,
                             S3_BUCKET,
@@ -159,9 +169,16 @@ def add_room():
                                 'ContentType': file.mimetype
                             }
                         )
+                        url = build_s3_url(S3_BUCKET, S3_REGION, key)
+                        print(f"Successfully uploaded to S3: {url}")
+                        room_data['images'].append(url)
                     except (BotoCoreError, ClientError) as e:
-                        return jsonify({'error': f"S3 upload failed: {str(e)}"}), 500
-                    room_data['images'].append(build_s3_url(S3_BUCKET, S3_REGION, key))
+                        error_msg = f"S3 upload failed for {file.filename}: {str(e)}"
+                        print(f"ERROR: {error_msg}")
+                        return jsonify({'error': error_msg}), 500
+                else:
+                    print(f"Skipped file {i}: {file.filename if file else 'None'} (invalid)")
+            print(f"All files uploaded. Total images: {len(room_data['images'])}")
         else:
             room_folder = os.path.join(app.config['UPLOAD_FOLDER'], folder_name)
             os.makedirs(room_folder, exist_ok=True)
