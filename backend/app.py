@@ -218,6 +218,12 @@ def add_room():
                     ExtraArgs={'ContentType': 'application/json'}
                 )
                 print(f"Successfully synced rooms.json to S3")
+                
+                # Reload rooms from S3 to ensure data consistency
+                print(f"Reloading rooms.json from S3...")
+                obj = s3_client.get_object(Bucket=S3_BUCKET, Key='data/rooms.json')
+                rooms[:] = json.loads(obj['Body'].read().decode('utf-8'))
+                print(f"Reloaded {len(rooms)} rooms from S3")
             except (BotoCoreError, ClientError) as e:
                 error_msg = f"Failed to sync rooms.json to S3: {str(e)}"
                 print(f"ERROR: {error_msg}")
@@ -290,6 +296,12 @@ def delete_room(room_id):
                 ExtraArgs={'ContentType': 'application/json'}
             )
             print(f"Successfully synced rooms.json to S3")
+            
+            # Reload rooms from S3 to ensure data consistency
+            print(f"Reloading rooms.json from S3...")
+            obj = s3_client.get_object(Bucket=S3_BUCKET, Key='data/rooms.json')
+            rooms[:] = json.loads(obj['Body'].read().decode('utf-8'))
+            print(f"Reloaded {len(rooms)} rooms from S3")
         except (BotoCoreError, ClientError) as e:
             error_msg = f"Failed to sync rooms.json to S3: {str(e)}"
             print(f"ERROR: {error_msg}")
