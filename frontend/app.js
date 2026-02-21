@@ -308,13 +308,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const info = document.createElement('div');
         info.className = 'room-info';
 
-        // Only show price in admin mode
-        if (isAdmin) {
-            const price = document.createElement('div');
-            price.className = 'room-price';
-            price.textContent = `${room.price.toLocaleString()} VND`;
-            info.appendChild(price);
-        }
+        // Show price for everyone
+        const price = document.createElement('div');
+        price.className = 'room-price';
+        price.textContent = `${room.price.toLocaleString()} VND`;
+        info.appendChild(price);
 
         const roomId = document.createElement('div');
         roomId.className = 'room-id';
