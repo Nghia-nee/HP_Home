@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadDistricts(priceRange) {
-        fetch(`/districts?priceRange=${priceRange}`)
+        fetch(`/districts?priceRange=${priceRange}&t=${Date.now()}`)
             .then(response => response.json())
             .then(districts => {
                 const container = document.getElementById('district-buttons');
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadWards(priceRange, district) {
-        fetch(`/wards?district=${encodeURIComponent(district)}&priceRange=${priceRange}`)
+        fetch(`/wards?district=${encodeURIComponent(district)}&priceRange=${priceRange}&t=${Date.now()}`)
             .then(response => response.json())
             .then(wards => {
                 const container = document.getElementById('ward-buttons');
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadRooms(priceRange, district, ward) {
-        fetch(`/rooms?district=${encodeURIComponent(district)}&ward=${encodeURIComponent(ward)}&priceRange=${priceRange}`)
+        fetch(`/rooms?district=${encodeURIComponent(district)}&ward=${encodeURIComponent(ward)}&priceRange=${priceRange}&t=${Date.now()}`)
             .then(response => response.json())
             .then(rooms => {
                 currentRooms = rooms;
