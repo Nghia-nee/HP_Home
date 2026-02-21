@@ -674,8 +674,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Helper function to generate street code
     function generateStreetCode(streetName) {
-        return removeVietnameseAccents(streetName)
-            .split(' ')
+        const normalizedWords = removeVietnameseAccents(streetName)
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+
+        if (normalizedWords.length === 0) {
+            return '';
+        }
+
+        if (normalizedWords.length === 1) {
+            return normalizedWords[0].toUpperCase().substring(0, 10);
+        }
+
+        return normalizedWords
             .map(word => word.charAt(0).toUpperCase())
             .join('')
             .substring(0, 10); // Limit to 10 chars
