@@ -141,6 +141,13 @@ def add_room():
         }
         
         files = request.files.getlist('images')
+        
+        # Log to file for debugging on production
+        log_msg = f"=== ADD ROOM REQUEST ===\nFolder: {folder_name}\nFiles: {len(files)}\nUSE_S3: {USE_S3}\nBucket: {S3_BUCKET}\nRegion: {S3_REGION}\n"
+        print(log_msg)
+        with open('/tmp/hp_home_debug.log', 'a', encoding='utf-8') as f:
+            f.write(log_msg)
+        
         print(f"=== ADD ROOM REQUEST ===")
         print(f"Folder name: {folder_name}")
         print(f"Number of files received: {len(files)}")
@@ -171,10 +178,14 @@ def add_room():
                         )
                         url = build_s3_url(S3_BUCKET, S3_REGION, key)
                         print(f"Successfully uploaded to S3: {url}")
+                        with open('/tmp/hp_home_debug.log', 'a', encoding='utf-8') as f:
+                            f.write(f"Uploaded: {key}\n")
                         room_data['images'].append(url)
                     except (BotoCoreError, ClientError) as e:
                         error_msg = f"S3 upload failed for {file.filename}: {str(e)}"
                         print(f"ERROR: {error_msg}")
+                        with open('/tmp/hp_home_debug.log', 'a', encoding='utf-8') as f:
+                            f.write(f"ERROR: {error_msg}\n")
                         return jsonify({'error': error_msg}), 500
                 else:
                     print(f"Skipped file {i}: {file.filename if file else 'None'} (invalid)")
