@@ -47,25 +47,50 @@ def build_s3_url(bucket, region, key):
         return f"https://{bucket}.s3.amazonaws.com/{key}"
     return f"https://{bucket}.s3.{region}.amazonaws.com/{key}"
 
+
+ROOMS_S3_KEY = 'data/rooms.json'
+ROOMS_LOCAL_FILE = os.path.join(os.path.dirname(__file__), '..', 'data', 'rooms.json')
+
 # Load data
 with open(os.path.join(os.path.dirname(__file__), '..', 'data', 'tag-definitions.json'), 'r', encoding='utf-8') as f:
     tag_definitions = json.load(f)
 
-# Load rooms.json - try S3 first if configured, otherwise local
-rooms_file = os.path.join(os.path.dirname(__file__), '..', 'data', 'rooms.json')
-if USE_S3:
-    try:
+rooms = []
+
+
+def load_rooms():
+    global rooms
+    if USE_S3:
         s3_client = build_s3_client()
-        obj = s3_client.get_object(Bucket=S3_BUCKET, Key='data/rooms.json')
+        obj = s3_client.get_object(Bucket=S3_BUCKET, Key=ROOMS_S3_KEY)
         rooms = json.loads(obj['Body'].read().decode('utf-8'))
-        print("Loaded rooms.json from S3")
-    except (BotoCoreError, ClientError) as e:
-        print(f"Could not load rooms.json from S3: {e}. Using local file.")
-        with open(rooms_file, 'r', encoding='utf-8') as f:
+    else:
+        with open(ROOMS_LOCAL_FILE, 'r', encoding='utf-8') as f:
             rooms = json.load(f)
-else:
-    with open(rooms_file, 'r', encoding='utf-8') as f:
-        rooms = json.load(f)
+    return rooms
+
+
+def save_rooms():
+    payload = json.dumps(rooms, ensure_ascii=False, indent=2)
+    if USE_S3:
+        s3_client = build_s3_client()
+        s3_client.put_object(
+            Bucket=S3_BUCKET,
+            Key=ROOMS_S3_KEY,
+            Body=payload.encode('utf-8'),
+            ContentType='application/json'
+        )
+    else:
+        with open(ROOMS_LOCAL_FILE, 'w', encoding='utf-8') as f:
+            f.write(payload)
+
+
+try:
+    load_rooms()
+    print(f"Loaded rooms.json from {'S3' if USE_S3 else 'local file'}")
+except (BotoCoreError, ClientError, FileNotFoundError, json.JSONDecodeError) as e:
+    print(f"Could not load rooms at startup: {e}")
+    rooms = []
 
 def get_price_filter(price_range):
     if price_range == 'under-4m':
@@ -84,6 +109,11 @@ def static_files(path):
 
 @app.route('/districts')
 def get_districts():
+    try:
+        load_rooms()
+    except (BotoCoreError, ClientError, FileNotFoundError, json.JSONDecodeError) as e:
+        return jsonify({'error': f'Failed to load rooms: {str(e)}'}), 500
+
     price_range = request.args.get('priceRange')
     price_filter = get_price_filter(price_range)
     districts = {}
@@ -95,6 +125,11 @@ def get_districts():
 
 @app.route('/wards')
 def get_wards():
+    try:
+        load_rooms()
+    except (BotoCoreError, ClientError, FileNotFoundError, json.JSONDecodeError) as e:
+        return jsonify({'error': f'Failed to load rooms: {str(e)}'}), 500
+
     district = request.args.get('district')
     price_range = request.args.get('priceRange')
     price_filter = get_price_filter(price_range)
@@ -107,6 +142,11 @@ def get_wards():
 
 @app.route('/rooms')
 def get_rooms():
+    try:
+        load_rooms()
+    except (BotoCoreError, ClientError, FileNotFoundError, json.JSONDecodeError) as e:
+        return jsonify({'error': f'Failed to load rooms: {str(e)}'}), 500
+
     district = request.args.get('district')
     ward = request.args.get('ward')
     price_range = request.args.get('priceRange')
@@ -136,6 +176,8 @@ def get_config():
 @app.route('/rooms', methods=['POST'])
 def add_room():
     try:
+        load_rooms()
+
         folder_name = request.form.get('folderName')
         room_data = {
             'roomId': request.form.get('roomId'),
@@ -210,35 +252,14 @@ def add_room():
                     room_data['images'].append(f"/assets/images/{folder_name}/{filename}")
         
         rooms.append(room_data)
-        # Save to file (local)
-        rooms_file = os.path.join(os.path.dirname(__file__), '..', 'data', 'rooms.json')
-        with open(rooms_file, 'w', encoding='utf-8') as f:
-            json.dump(rooms, f, ensure_ascii=False, indent=2)
-        
-        # Also save to S3 if configured
-        if USE_S3:
-            try:
-                print(f"Syncing rooms.json to S3 bucket: {S3_BUCKET}")
-                s3_client = build_s3_client()
-                s3_client.upload_file(
-                    rooms_file,
-                    S3_BUCKET,
-                    'data/rooms.json',
-                    ExtraArgs={'ContentType': 'application/json'}
-                )
-                print(f"Successfully synced rooms.json to S3")
-                
-                # Reload rooms from S3 to ensure data consistency
-                print(f"Reloading rooms.json from S3...")
-                obj = s3_client.get_object(Bucket=S3_BUCKET, Key='data/rooms.json')
-                rooms[:] = json.loads(obj['Body'].read().decode('utf-8'))
-                print(f"Reloaded {len(rooms)} rooms from S3")
-            except (BotoCoreError, ClientError) as e:
-                error_msg = f"Failed to sync rooms.json to S3: {str(e)}"
-                print(f"ERROR: {error_msg}")
-                # Remove the room we just added since S3 sync failed
-                rooms.pop()
-                return jsonify({'error': error_msg}), 500
+        try:
+            save_rooms()
+            load_rooms()
+        except (BotoCoreError, ClientError, FileNotFoundError, json.JSONDecodeError) as e:
+            error_msg = f"Failed to save rooms.json: {str(e)}"
+            print(f"ERROR: {error_msg}")
+            rooms.pop()
+            return jsonify({'error': error_msg}), 500
         
         return jsonify({'message': 'Room added', 'roomId': room_data['roomId']}), 201
     except Exception as e:
@@ -247,6 +268,8 @@ def add_room():
 @app.route('/rooms/<room_id>', methods=['DELETE'])
 def delete_room(room_id):
     global rooms
+    load_rooms()
+
     # Find room to delete
     room = next((r for r in rooms if r['roomId'] == room_id), None)
     if not room:
@@ -288,35 +311,15 @@ def delete_room(room_id):
     # Remove from rooms list
     old_rooms = rooms[:]
     rooms = [r for r in rooms if r['roomId'] != room_id]
-    # Save to file (local)
-    rooms_file = os.path.join(os.path.dirname(__file__), '..', 'data', 'rooms.json')
-    with open(rooms_file, 'w', encoding='utf-8') as f:
-        json.dump(rooms, f, ensure_ascii=False, indent=2)
-    
-    # Also save to S3 if configured
-    if USE_S3:
-        try:
-            print(f"Syncing rooms.json to S3 after deletion")
-            s3_client = build_s3_client()
-            s3_client.upload_file(
-                rooms_file,
-                S3_BUCKET,
-                'data/rooms.json',
-                ExtraArgs={'ContentType': 'application/json'}
-            )
-            print(f"Successfully synced rooms.json to S3")
-            
-            # Reload rooms from S3 to ensure data consistency
-            print(f"Reloading rooms.json from S3...")
-            obj = s3_client.get_object(Bucket=S3_BUCKET, Key='data/rooms.json')
-            rooms[:] = json.loads(obj['Body'].read().decode('utf-8'))
-            print(f"Reloaded {len(rooms)} rooms from S3")
-        except (BotoCoreError, ClientError) as e:
-            error_msg = f"Failed to sync rooms.json to S3: {str(e)}"
-            print(f"ERROR: {error_msg}")
-            # Restore rooms list since S3 sync failed
-            rooms[:] = old_rooms
-            return jsonify({'error': error_msg}), 500
+
+    try:
+        save_rooms()
+        load_rooms()
+    except (BotoCoreError, ClientError, FileNotFoundError, json.JSONDecodeError) as e:
+        error_msg = f"Failed to save rooms.json: {str(e)}"
+        print(f"ERROR: {error_msg}")
+        rooms = old_rooms
+        return jsonify({'error': error_msg}), 500
     
     return jsonify({'message': 'Room deleted'})
 
